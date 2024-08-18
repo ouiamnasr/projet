@@ -1,0 +1,215 @@
+shop_db
+
+-- Créer la table user_form
+CREATE TABLE `user_form` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+-- Créer la table cart
+CREATE TABLE `cart` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `price` DECIMAL(10, 2) NOT NULL,
+  `image` VARCHAR(255) NOT NULL,
+  `description` TEXT NOT NULL,
+  `quantity` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `user_form`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- Insérer des exemples d'utilisateurs
+INSERT INTO `user_form` (`name`, `email`, `password`) VALUES 
+('John Doe', 'john@example.com', MD5('password123')),
+('Jane Doe', 'jane@example.com', MD5('password456'));
+
+-- Insérer des exemples de produits
+INSERT INTO `products` (`name`, `price`, `image`) VALUES 
+('Product 1', 10.00, 'product1.jpg'),
+('Product 2', 20.00, 'product2.jpg'),
+('Product 3', 30.00, 'product3.jpg');
+
+
+-- Créer la table admin
+CREATE TABLE `admin` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `admin` (`username`, `password`) VALUES ('admin', MD5('admin123'));
+
+
+CREATE TABLE `orders` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `phone` VARCHAR(255) NOT NULL,
+  `address` VARCHAR(255) NOT NULL,
+  `city` VARCHAR(255) NOT NULL,
+  `country` VARCHAR(255) NOT NULL,
+  `zip` VARCHAR(255) NOT NULL,
+  `placed_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `user_form`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+ALTER TABLE `products` ADD COLUMN `description` TEXT NOT NULL AFTER `price`;
+
+
+CREATE TABLE products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    description TEXT NOT NULL,
+    image VARCHAR(255) NOT NULL,
+    category_id INT,
+    FOREIGN KEY (category_id) REFERENCES categories(id)
+);
+
+
+CREATE TABLE categories (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL
+);
+
+ALTER TABLE `cart` ADD COLUMN `description` TEXT NOT NULL;
+
+CREATE TABLE order_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+
+
+
+
+---------------new good--------------------
+
+-- Créer la table user_form
+CREATE TABLE `user_form` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Insérer des exemples d'utilisateurs
+INSERT INTO `user_form` (`name`, `email`, `password`) VALUES 
+('John Doe', 'john@example.com', MD5('password123')),
+('Jane Doe', 'jane@example.com', MD5('password456'));
+
+-- Créer la table admin
+CREATE TABLE `admin` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `admin` (`username`, `password`) VALUES ('admin', MD5('admin123'));
+
+-- Créer la table categories
+CREATE TABLE `categories` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(255) NOT NULL
+);
+
+-- Insérer des exemples de catégories
+INSERT INTO `categories` (`name`) VALUES 
+('Category 1'),
+('Category 2');
+
+-- Créer la table products
+CREATE TABLE `products` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(255) NOT NULL,
+  `price` DECIMAL(10, 2) NOT NULL,
+  `description` TEXT NOT NULL,
+  `image` VARCHAR(255) NOT NULL,
+  `category_id` INT,
+  FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- Insérer des exemples de produits
+INSERT INTO products (name, price, description, image, category_id) VALUES 
+('Product 1', 10.00, 'Description for Product 1', 'product1.jpg', 1),
+('Product 2', 20.00, 'Description for Product 2', 'product2.jpg', 2),
+('Product 3', 30.00, 'Description for Product 3', 'product3.jpg', 1);
+
+
+
+-- Créer la table cart
+CREATE TABLE `cart` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `price` DECIMAL(10, 2) NOT NULL,
+  `description` TEXT NOT NULL,
+  `image` VARCHAR(255) NOT NULL,
+  `quantity` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `user_form`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+remplacage 
+
+
+-- Créer la table cart avec la colonne product_id
+CREATE TABLE cart (
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  user_id INT(11) NOT NULL,
+  product_id INT(11) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  price DECIMAL(10, 2) NOT NULL,
+  description TEXT NOT NULL,
+  image VARCHAR(255) NOT NULL,
+  quantity INT(11) NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES user_form(id) ON DELETE CASCADE,
+  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- Créer la table orders
+CREATE TABLE `orders` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `phone` VARCHAR(255) NOT NULL,
+  `address` VARCHAR(255) NOT NULL,
+  `city` VARCHAR(255) NOT NULL,
+  `country` VARCHAR(255) NOT NULL,
+  `zip` VARCHAR(255) NOT NULL,
+  `placed_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `user_form`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Créer la table order_items
+CREATE TABLE `order_items` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `order_id` INT NOT NULL,
+  `product_id` INT NOT NULL,
+  `quantity` INT NOT NULL,
+  `price` DECIMAL(10, 2) NOT NULL,
+  FOREIGN KEY (`order_id`) REFERENCES `orders`(`id`),
+  FOREIGN KEY (`product_id`) REFERENCES `products`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
